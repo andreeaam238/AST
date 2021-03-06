@@ -1,0 +1,86 @@
+Blaga Ana-Maria-Andreea, 324CB
+
+A little about this homework... 
+
+In my first version of this homework I was reversing the initial prefix 
+expression. This way I was getting the something similar to the postfix 
+expression. I was tokenizing the string that was storing the postfix expression 
+and reversing each token. 
+
+For example: prefix expression "+ 121 112" -> reversed expression "211 121 +". 
+
+So each time I created a new node I had to reverse the string that I was using 
+for its 'data' field (a lot of reversig for nothing important). But the main 
+advantage of this was that I didn't have to use recursion. Each time I was getting 
+a numeric string as token I was creating a new node for it and I was pushing it 
+to the stack. When I was getting an operator (+, -, * or /) I was creating a new 
+node for it, popping two nodes from the stack and setting them as its left, 
+respectively right subtree and pushing the new node to the stack. When there 
+wasn't any token left in the string the only node left on the stack was the root 
+node so I was popping and returning it. I didn't really like this version because 
+of all the reversing of the strings that I had to do, but it helped me to 
+understand how the expression tree works and how I should write the current 
+version that I submitted. 
+
+In the current version I'm creating the root first and after that I'm building 
+its left and right subtrees using a recursive function. I'm tokenizing the prefix 
+expression and create a new node for each token. Each time I'm getting a numeric 
+string as token I'm creating a new node for it and returning it, but when I'm 
+getting an operator I'm creating a new node for it, I'm building its left and 
+right subtrees using recursion and finally I'm returning it. I like this version 
+more because I don't have to reverse the token every time I'm creating a new node. 
+
+I'm explaining how and why I'm using each function below: 
+
+The function "iocla_atoi" is used for converting a numeric string to its 
+corresponding number. Before we start looping the string's characters we have 
+to check whether we'll have a positive or a negative number. First we'll suppose 
+it's positive, so ecx will be set to 1 (I'm using this register to store the 
+number's sign). We have to compare the first character from the string to '-'. 
+If they're equal ecx is set to -1 (negative number), else it will be 1 (positive 
+number). The strategy that I'm using is: build a positive number and at the end 
+multiply it by ecx. If it should be a positive number it will be the same after 
+multiplying, else this multiplication will make it negative. Each numeric character 
+from the string is converted to its corresponding digit by subtracting '0' from it. 
+After this the digit is appended to the number. In order to do this the previous 
+version of the number is mutiplied by 10 and then the new digit is added to it. 
+After the string's end has been reached the number is multiplied by ecx to get 
+its sign. 
+
+The function "create_tree" builds an abstract syntax tree from a prefix expression 
+passed as a string. I'm using strtok to tokenize the string (the tokens will be 
+the nodes' data fields). First the root node is created by calling the "create_node" 
+function with the first token that we get from strtok (since we have a prefix 
+expression the first token will always be an operator: +, -, * or /). After this 
+the root's left and right subtrees are built by calling the "build_subtrees" 
+function for each of these two. The nodes returned by the two calls of the 
+"build_subtrees" function are set as its left, respectively right subtree and 
+the root's address is returned.
+
+The function "build_subtrees" is used for building the root's left and right 
+subtrees. The prefix expression is tokenized using strtok and each token is 
+checked whether it's a number or an operator. A new node is created using the 
+"create_node" function for each token in the string. I'm using the "strlen" 
+function for computing the token's length. If it's greater than 1 we have a number
+for sure so we have to return the node immediately. Else if the length is 1 (the 
+string consists of only one character) we have either an operator or a number, 
+so we compare the character to '0'. If it's greater or equal to '0' we have a 
+number so we return the node as we did earlier. But if we have an operator we 
+have to built its left and right subtrees by calling recursively the "build_subtrees" 
+function. After we assign the nodes returned by the recursive call to the current 
+node's left, respectively right subtree we have to return it. So if it's a numeric 
+node we have to return it (it's a leaf, its children will be null), else if we 
+have an operator we must build its subtrees by calling the function recursively 
+before returning the node. 
+
+The function "create_node" is used for creating and returning a new node. First 
+we have to allocate memory and copy the string we'll use for the node's data 
+field to the memory zone that we allocated earlier. I'm doing these two operations 
+using the "strdup" function. After this I allocate memory for the node using the 
+"calloc" function. In order to create a node I need 12 bytes, that's why I'm 
+calling the "calloc" function with 12 as an argument. Each node has a 'data' 
+field (4 bytes), a 'left child' field (4 bytes) and a 'right child' field (4 
+bytes). The node's data field is set to the string that was duplicated earlier 
+and the new node is returned.
+
+Thanks for reading! Happy Holidays!
